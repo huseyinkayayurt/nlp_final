@@ -1,18 +1,17 @@
 import os
-import torch
+import warnings
 
 from chunks import collect_chunks_with_indices
 from data_loader import load_data
-from embeddings import calculate_and_save_embeddings, calculate_question_embeddings
+from embeddings import calculate_question_embeddings, calculate_chunk_embeddings, save_embeddings, load_embeddings
 from evaluate import evaluate_top_k_accuracy
 from model import load_model_and_tokenizer
-from visualize import visualize_embeddings, visualize_top_k_accuracies
+from visualize import visualize_embeddings, visualize_embeddings_combined, plot_top_k_accuracies
+
+warnings.filterwarnings("ignore", category=UserWarning, module='urllib3')
 
 
 def main():
-    """
-    Ana fonksiyon, veri setini yükler ve bir örneği konsola yazdırır.
-    """
     file_path = "data_set/train.csv"
     data = load_data(file_path, size=1000)
 
@@ -24,31 +23,33 @@ def main():
         all_chunks, correct_indices = collect_chunks_with_indices(data)
 
         model_name = "jinaai/jina-embeddings-v3"
-        embeddings_file = f"{output_folder_name}_chunks_embeddings.pt"
+        chunks_embeddings_file = f"{output_folder_name}_chunks_embeddings.pt"
+        questions_embeddings_file = f"{output_folder_name}_questions_embeddings.pt"
+        embeddings_combine_tsne_output = f"{output_folder_name}_embeddings_combine_tsne.png"
+        embeddings_chunk_tsne_output = f"{output_folder_name}_embeddings_chunk_tsne.png"
+        embeddings_question_tsne_output = f"{output_folder_name}_embeddings_question_tsne.png"
+        top_k_accuracies_output = f"{output_folder_name}_top_k_accuracies.png"
 
         tokenizer, model = load_model_and_tokenizer(model_name)
-        # calculate_and_save_embeddings(all_chunks, model, tokenizer, embeddings_file)
 
-        embeddings_tsne_output = f"{output_folder_name}_chunks_embeddings_tsne.png"
-        visualize_embeddings(embeddings_file, embeddings_tsne_output)
+        # chunks_embeddings = calculate_chunk_embeddings(all_chunks, model, tokenizer)
+        # save_embeddings(chunks_embeddings, chunks_embeddings_file)
 
-        # Embedding dosyalarını yükle
-        question_embeddings = calculate_question_embeddings(data, model, tokenizer)
-        chunk_embeddings = torch.load(embeddings_file)
+        # questions_embeddings = calculate_question_embeddings(data, model, tokenizer)
+        # save_embeddings(questions_embeddings, questions_embeddings_file)
 
-        # Top-1 ve Top-5 başarı oranlarını hesapla
-        print("Top-k başarı oranları hesaplanıyor...")
-        top_k_accuracies = evaluate_top_k_accuracy(
-            question_embeddings=question_embeddings,
-            chunk_embeddings=chunk_embeddings,
-            correct_indices=correct_indices,
-            top_k_values=[1, 5]
-        )
+        chunk_embeddings = load_embeddings(chunks_embeddings_file)
+        question_embeddings = load_embeddings(questions_embeddings_file)
+
+        visualize_embeddings(chunk_embeddings, embeddings_chunk_tsne_output)
+        visualize_embeddings(question_embeddings, embeddings_question_tsne_output)
+        visualize_embeddings_combined(chunk_embeddings, question_embeddings, embeddings_combine_tsne_output)
+
+        top_k_accuracies = evaluate_top_k_accuracy(question_embeddings, chunk_embeddings, correct_indices, [1, 5])
         print("Başarı oranları:", top_k_accuracies)
 
-        # Başarı oranlarını görselleştir
-        top_k_accuracies_output = f"{output_folder_name}_top_k_accuracies.png"
-        visualize_top_k_accuracies(top_k_accuracies, top_k_accuracies_output)
+        # plot_top_k_accuracy(top_k_accuracies["top_1"], top_k_accuracies["top_5"], top_k_accuracies_output)
+        plot_top_k_accuracies(top_k_accuracies["top_1"], top_k_accuracies["top_5"], top_k_accuracies_output)
 
 
     else:

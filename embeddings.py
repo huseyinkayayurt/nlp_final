@@ -3,19 +3,7 @@ from tqdm import tqdm
 import numpy as np
 
 
-def calculate_and_save_embeddings(chunks, model, tokenizer, output_file):
-    """
-    Chunk'lar için embedding hesapla ve kaydet.
-
-    Args:
-        chunks (List[str]): Chunk metinleri.
-        output_file (str): Embedding'lerin kaydedileceği dosya adı.
-        :param output_file:
-        :param chunks:
-        :param tokenizer:
-        :param model:
-    """
-
+def calculate_chunk_embeddings(chunks, model, tokenizer):
     embeddings = []
 
     # Embedding hesaplama
@@ -27,23 +15,22 @@ def calculate_and_save_embeddings(chunks, model, tokenizer, output_file):
             chunk_embedding = outputs.last_hidden_state.mean(dim=1).squeeze(0).numpy()
             embeddings.append(chunk_embedding)
 
+    return embeddings
+
+
+def save_embeddings(embeddings, output_file):
     # Embedding'leri kaydet
     embeddings = np.array(embeddings)
     torch.save(embeddings, output_file)
     print(f"Embedding'ler kaydedildi: {output_file}")
 
 
+def load_embeddings(file):
+    embeddings = torch.load(file, weights_only=False)
+    return embeddings
+
+
 def calculate_question_embeddings(data, model, tokenizer, batch_size=16, device="cuda" if torch.cuda.is_available() else "cpu"):
-    """
-    Soruların embedding'lerini hesaplar.
-
-        :param device:
-        :param batch_size:
-        :param data:
-        :param tokenizer:
-        :param model:
-    """
-
     # Soruları al
     questions = [item["question"] for item in data]
 

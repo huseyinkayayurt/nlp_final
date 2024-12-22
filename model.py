@@ -1,8 +1,9 @@
 import os
-import einops  # jinaai/jina-embeddings-v3 dil modeli için gerekli
 from transformers import AutoTokenizer, AutoModel
+import einops  # jinaai/jina-embeddings-v3 dil modeli için gerekli
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 
 def load_model_and_tokenizer(model_name):
     """Model ve tokenizer yükler."""

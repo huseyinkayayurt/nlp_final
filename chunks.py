@@ -1,16 +1,7 @@
 from typing import List, Dict
 
+
 def collect_chunks_with_indices(data: List[Dict]) -> (List[str], Dict[int, int]):
-    """
-    Tüm chunk'ları tek bir listeye toplar ve doğru chunk indekslerini kaydeder.
-
-    Args:
-        data (List[Dict]): 1000 elemanlı veri kümesi.
-
-    Returns:
-        List[str]: Tüm chunk'ların yer aldığı 5000 elemanlı liste.
-        Dict[int, int]: Her soru için doğru chunk'ın yeni indeksini gösteren sözlük.
-    """
     all_chunks = []
     correct_indices = {}
     current_index = 0

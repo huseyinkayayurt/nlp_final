@@ -3,16 +3,6 @@ from typing import List, Dict
 
 
 def load_data(file_path: str, size: int = 1000) -> List[Dict[str, str]]:
-    """
-    CSV dosyasını okuyarak, context eleman sayısı 5 olan ve belirtilen boyutta veri döner.
-
-    Args:
-        file_path (str): CSV dosyasının dosya yolu.
-        size (int): İstenen veri boyutu (default: 1000).
-
-    Returns:
-        List[Dict[str, str]]: İşlenmiş veri kümesi.
-    """
     dataset = []
     try:
         with open(file_path, mode="r", encoding="utf-8") as file:
@@ -39,16 +29,6 @@ def load_data(file_path: str, size: int = 1000) -> List[Dict[str, str]]:
 
 
 def extract_chunks(context: str, split_points: List[int]) -> List[str]:
-    """
-    Context metnini verilen ayrılma noktalarına göre chunk'lara böler.
-
-    Args:
-        context (str): Metin.
-        split_points (List[int]): Ayrılma noktalarının indeksleri.
-
-    Returns:
-        List[str]: Chunk'lar.
-    """
     chunks = []
     start = 0
     for end in split_points:
