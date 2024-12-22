@@ -73,3 +73,5 @@ env/
 
 # Project specific files
 
+/data_set/
+/WikiRAG-TR/
