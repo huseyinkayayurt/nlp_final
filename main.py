@@ -1,25 +1,36 @@
+import os
+
 from chunks import collect_chunks_with_indices
 from data_loader import load_data
+from embeddings import calculate_and_save_embeddings
+from model import load_model_and_tokenizer
+from visualize import visualize_embeddings
+
 
 def main():
     """
     Ana fonksiyon, veri setini yükler ve bir örneği konsola yazdırır.
     """
     file_path = "data_set/train.csv"
-    data = load_data(file_path, size=1000)
+    data = load_data(file_path, size=10)
+
+    filename="output/"
+    folder_name = os.path.dirname(filename)
+    os.makedirs(folder_name, exist_ok=True)
 
     if data:
-        soru_id = 10
-        print(f"soru {soru_id}: {data[soru_id]}")
         all_chunks, correct_indices = collect_chunks_with_indices(data)
 
-        print(f"Toplam chunk sayısı: {len(all_chunks)}")  # 5000 bekleniyor
-        print(f"İlk birkaç chunk: {all_chunks[:5]}")
-        print(f"Doğru indeksler: {list(correct_indices.items())[:5]}")
+        model_name = "jinaai/jina-embeddings-v3"
+        embeddings_file = f"{filename}_chunks_embeddings.pt"
+
+        tokenizer, model = load_model_and_tokenizer(model_name)
+        calculate_and_save_embeddings(all_chunks, model,tokenizer, embeddings_file)
+
+        output_image = f"{filename}_chunks_embeddings_tsne.png"
+        visualize_embeddings(embeddings_file, output_image)
 
 
-        dogru_chunk_index = correct_indices[soru_id]
-        print(f"Soru {soru_id} için doğru chunk: {all_chunks[dogru_chunk_index]}")
     else:
         print("Veri kümesi yüklenemedi.")
 
