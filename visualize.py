@@ -24,3 +24,24 @@ def visualize_embeddings(embeddings_file, output_image):
     plt.savefig(output_image)
     plt.close()
     print(f"TSNE görseli kaydedildi: {output_image}")
+
+def visualize_top_k_accuracies(top_k_accuracies, output_image):
+    """
+    Top-k başarı oranlarını bir grafik olarak görselleştirir ve kaydeder.
+
+    Args:
+        top_k_accuracies (dict): Top-k başarı oranları.
+        output_image (str): Görselin kaydedileceği dosya adı.
+    """
+    labels = list(top_k_accuracies.keys())
+    values = list(top_k_accuracies.values())
+
+    plt.figure(figsize=(8, 6))
+    plt.bar(labels, values, color=['blue', 'green'], alpha=0.7)
+    plt.title("Top-k Başarı Oranları")
+    plt.xlabel("Top-k")
+    plt.ylabel("Başarı Oranı")
+    plt.ylim(0, 1)
+    plt.savefig(output_image)
+    plt.close()
+    print(f"Başarı oranları grafiği kaydedildi: {output_image}")
