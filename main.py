@@ -1,5 +1,4 @@
 import os
-import warnings
 
 from chunks import collect_chunks_with_indices
 from data_loader import load_data
@@ -7,8 +6,6 @@ from embeddings import calculate_question_embeddings, calculate_chunk_embeddings
 from evaluate import evaluate_top_k_accuracy
 from model import load_model_and_tokenizer
 from visualize import visualize_embeddings, visualize_embeddings_combined, plot_top_k_accuracies
-
-warnings.filterwarnings("ignore", category=UserWarning, module='urllib3')
 
 
 def main():
