@@ -76,3 +76,5 @@ env/
 /data_set/
 /WikiRAG-TR/
 output/
+fine_tuned_model/
+trained_model
