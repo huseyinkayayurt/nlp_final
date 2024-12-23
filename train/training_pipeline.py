@@ -17,7 +17,7 @@ class CustomDataset(Dataset):
         return self.data[idx]
 
 
-def train_model(model, tokenizer, train_data, eval_data, output_dir="trained_model"):
+def train_model(model, tokenizer, train_data, eval_data, output_dir):
     """
     Modeli eğitir ve çıktıyı kaydeder.
 
@@ -28,6 +28,8 @@ def train_model(model, tokenizer, train_data, eval_data, output_dir="trained_mod
         eval_data (list): Değerlendirme verisi.
         output_dir (str): Modelin kaydedileceği dizin.
     """
+    os.makedirs(output_dir, exist_ok=True)
+
     training_args = TrainingArguments(
         output_dir=output_dir,
         evaluation_strategy="epoch",
@@ -52,10 +54,4 @@ def train_model(model, tokenizer, train_data, eval_data, output_dir="trained_mod
 
     trainer.train()
 
-    save_directory = "fine_tuned_model"
-    os.makedirs(save_directory, exist_ok=True)
-    save_model_and_tokenizer(model, tokenizer, save_directory)
-
-    # os.makedirs(output_dir, exist_ok=True)
-    # torch.save(model.state_dict(), os.path.join(output_dir, "pytorch_model.bin"))
-    # tokenizer.save_pretrained(output_dir)
+    save_model_and_tokenizer(model, tokenizer, output_dir)

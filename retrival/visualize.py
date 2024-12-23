@@ -82,32 +82,3 @@ def plot_top_k_accuracies(top1_acc, top5_acc, output_path):
     plt.tight_layout()
     plt.savefig(output_path)
     plt.close()
-
-# def plot_top_k_accuracy(top1_accuracy, top5_accuracy, output_path):
-#     accuracies = [top1_accuracy, top5_accuracy]
-#     labels = ["Top-1 Accuracy", "Top-5 Accuracy"]
-#     colors = ["blue", "green"]
-#
-#     fig, ax = plt.subplots(figsize=(8, 6))
-#     bars = ax.bar(labels, accuracies, color=colors, alpha=0.8)
-#
-#     # Barların üzerine başarı oranlarını yazdırma
-#     for bar, accuracy in zip(bars, accuracies):
-#         ax.text(
-#             bar.get_x() + bar.get_width() / 2,  # Barın ortası
-#             bar.get_height(),  # Barın yüksekliği
-#             f"{accuracy:.2f}",  # Metin (yüzde formatında)
-#             ha='center',  # Yatay hizalama
-#             va='bottom',  # Dikey hizalama
-#             fontsize=12,
-#             color="black"
-#         )
-#
-#     ax.set_ylim(0, 1.1)  # Y ekseni sınırları (maksimum 1.0'ı aşabilir)
-#     ax.set_ylabel("Accuracy", fontsize=14)
-#     ax.set_title("Top-1 ve Top-5 Başarı Oranları", fontsize=16)
-#     ax.grid(axis='y', linestyle='--', alpha=0.7)
-#
-#     plt.tight_layout()
-#     plt.savefig(output_path)
-#     plt.close()
