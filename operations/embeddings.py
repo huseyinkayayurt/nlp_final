@@ -18,18 +18,6 @@ def calculate_chunk_embeddings(chunks, model, tokenizer):
     return embeddings
 
 
-def save_embeddings(embeddings, output_file):
-    # Embedding'leri kaydet
-    embeddings = np.array(embeddings)
-    torch.save(embeddings, output_file)
-    print(f"Embedding'ler kaydedildi: {output_file}")
-
-
-def load_embeddings(file):
-    embeddings = torch.load(file, weights_only=False)
-    return embeddings
-
-
 def calculate_question_embeddings(data, model, tokenizer, batch_size=16, device="cuda" if torch.cuda.is_available() else "cpu"):
     # Soruları al
     questions = [item["question"] for item in data]

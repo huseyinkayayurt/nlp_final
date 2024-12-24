@@ -73,8 +73,7 @@ env/
 
 # Project specific files
 
-/data_set/
-/WikiRAG-TR/
-output/
-fine_tuned_model/
-trained_model
+data_set
+fine_tuned_model
+pre_trained_output
+trained_output

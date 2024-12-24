@@ -1,9 +1,8 @@
 import os
-import torch
 from transformers import Trainer, TrainingArguments
 from torch.utils.data import Dataset
 
-from model_utils import save_model_and_tokenizer
+from model.utils import save_model_and_tokenizer
 
 
 class CustomDataset(Dataset):
@@ -55,3 +54,4 @@ def train_model(model, tokenizer, train_data, eval_data, output_dir):
     trainer.train()
 
     save_model_and_tokenizer(model, tokenizer, output_dir)
+    print("Eğitim tamamlandı. Model kaydedildi.")

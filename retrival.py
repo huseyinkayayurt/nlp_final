@@ -1,27 +1,23 @@
-import os
+from data.chunks import collect_chunks_with_indices
 
-from retrival.chunks import collect_chunks_with_indices
-from retrival.data_loader import load_data
-from retrival.embeddings import load_embeddings, calculate_chunk_embeddings, save_embeddings, calculate_question_embeddings
-from retrival.evaluate import evaluate_top_k_accuracy
-from retrival.visualize import visualize_embeddings, visualize_embeddings_combined, plot_top_k_accuracies
+from operations.embeddings import calculate_chunk_embeddings, calculate_question_embeddings
+from operations.evaluate import evaluate_top_k_accuracy
+from operations.visualize import visualize_embeddings, visualize_embeddings_combined, plot_top_k_accuracies
+from utils.file import save_embeddings, load_embeddings
 
 
-def retrival_success(data_set_file_path, output_folder_name, model, tokenizer):
-    data = load_data(data_set_file_path, size=1000)
-
-    folder_name = os.path.dirname(output_folder_name)
-    os.makedirs(folder_name, exist_ok=True)
-
+def operation_retrival(
+        data,
+        model,
+        tokenizer,
+        chunks_embeddings_file,
+        questions_embeddings_file,
+        embeddings_chunk_tsne_output,
+        embeddings_question_tsne_output,
+        embeddings_combine_tsne_output,
+        top_k_accuracies_output):
     if data:
         all_chunks, correct_indices = collect_chunks_with_indices(data)
-
-        chunks_embeddings_file = f"{output_folder_name}chunks_embeddings.pt"
-        questions_embeddings_file = f"{output_folder_name}questions_embeddings.pt"
-        embeddings_combine_tsne_output = f"{output_folder_name}embeddings_combine_tsne.png"
-        embeddings_chunk_tsne_output = f"{output_folder_name}embeddings_chunk_tsne.png"
-        embeddings_question_tsne_output = f"{output_folder_name}embeddings_question_tsne.png"
-        top_k_accuracies_output = f"{output_folder_name}top_k_accuracies.png"
 
         chunks_embeddings = calculate_chunk_embeddings(all_chunks, model, tokenizer)
         save_embeddings(chunks_embeddings, chunks_embeddings_file)
@@ -40,7 +36,5 @@ def retrival_success(data_set_file_path, output_folder_name, model, tokenizer):
         print("Başarı oranları:", top_k_accuracies)
 
         plot_top_k_accuracies(top_k_accuracies["top_1"], top_k_accuracies["top_5"], top_k_accuracies_output)
-
-
     else:
         print("Veri kümesi yüklenemedi.")

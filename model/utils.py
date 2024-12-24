@@ -2,7 +2,6 @@ import os
 import json
 import torch
 from transformers import AutoTokenizer, AutoModel
-
 from train.model import CustomSequenceClassificationModel
 import einops  # jinaai/jina-embeddings-v3 dil modeli için gerekli
 
@@ -10,14 +9,6 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 
 def save_model_and_tokenizer(model, tokenizer, save_directory):
-    """
-    Model ve tokenizer'ı verilen dizine kaydeder.
-
-    Args:
-        model (nn.Module): Model.
-        tokenizer (AutoTokenizer): Tokenizer.
-        save_directory (str): Kaydetme dizini.
-    """
     os.makedirs(save_directory, exist_ok=True)
 
     # Modeli kaydet
@@ -37,17 +28,6 @@ def save_model_and_tokenizer(model, tokenizer, save_directory):
 
 
 def load_model_and_tokenizer_trained(save_directory, device="cpu"):
-    """
-    Model ve tokenizer'ı verilen dizinden yükler.
-
-    Args:
-        save_directory (str): Yükleme dizini.
-        device (str): Cihaz ("cpu" veya "cuda").
-
-    Returns:
-        model (nn.Module): Yüklenen model.
-        tokenizer (AutoTokenizer): Yüklenen tokenizer.
-    """
     # Tokenizer'ı yükle
     tokenizer = AutoTokenizer.from_pretrained(save_directory)
 
@@ -64,13 +44,21 @@ def load_model_and_tokenizer_trained(save_directory, device="cpu"):
     model.to(device)
     model.eval()
 
-    return model, tokenizer
+    return tokenizer, model
 
 
-def load_model_and_tokenizer(model_name):
+def load_model_and_tokenizer_pre_trained(model_name):
     """Model ve tokenizer yükler."""
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name, trust_remote_code=True, ignore_mismatched_sizes=True)
     model.eval()
+
+    return tokenizer, model
+
+
+def load_model_and_tokenizer_for_train(model_name):
+    """Model ve tokenizer yükler."""
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = CustomSequenceClassificationModel(base_model_name=model_name, num_labels=5)
 
     return tokenizer, model
