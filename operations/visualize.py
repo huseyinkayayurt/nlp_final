@@ -33,9 +33,12 @@ def visualize_embeddings_combined(chunk_embeddings, question_embeddings, output_
     print(f"TSNE görseli kaydedildi: {output_path}")
 
 
-def visualize_embeddings(embeddings, output_image):
+def visualize_embeddings(embeddings, output_image, perplexity=30):
     print("TSNE uygulanıyor...")
-    tsne = TSNE(n_components=2, random_state=42, perplexity=30)
+    n_samples = embeddings.shape[0]
+    if perplexity >= n_samples:
+        perplexity = max(5, n_samples // 2)
+    tsne = TSNE(n_components=2, random_state=42, perplexity=perplexity)
     embeddings_2d = tsne.fit_transform(embeddings)
 
     # Görselleştirme
